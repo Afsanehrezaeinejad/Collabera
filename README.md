@@ -9,7 +9,9 @@ Collabera.postman_environment.json – Environment file containing baseURL and t
 ## Setup Instructions
 Import both the collection and environment JSON files into Postman.
 
-Set your personal access token in the environment variable named token.
+Go to https://gorest.co.in/my-account/access-tokens and generate a new authToken.
+
+Open the Collabera.postman_environment.json file and replace the existing authToken value in the environment variables with the new token you generated in step 2.
 
 Run the full collection or individual requests as needed.
 
