@@ -1,0 +1,129 @@
+{
+	"info": {
+		"_postman_id": "db5793ba-4e91-43ff-aabc-a4de6f98f4ba",
+		"name": "Collabera",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "14389428"
+	},
+	"item": [
+		{
+			"name": "Add new user",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"// Generate random number for email ID",
+							"let randomNum = Math.floor(Math.random() * 100000);",
+							"pm.environment.set(\"randomEmailId\", randomNum);",
+							"",
+							"// Define sample data",
+							"const firstNames = [\"Emily\", \"James\", \"Olivia\", \"Liam\", \"Sophia\", \"Noah\", \"Isabella\", \"Ethan\", \"Charlotte\", \"Lucas\"];",
+							"const lastNames = [\"Smith\", \"Johnson\", \"Brown\", \"Taylor\", \"Anderson\", \"Thomas\", \"Moore\", \"Jackson\", \"White\", \"Harris\"];",
+							"const genders = [\"male\", \"female\"];",
+							"const statuses = [\"active\", \"inactive\"];",
+							"",
+							"// Pick random values",
+							"const randomFirstName = firstNames[Math.floor(Math.random() * firstNames.length)];",
+							"const randomLastName = lastNames[Math.floor(Math.random() * lastNames.length)];",
+							"const randomGender = genders[Math.floor(Math.random() * genders.length)];",
+							"const randomStatus = statuses[Math.floor(Math.random() * statuses.length)];",
+							"",
+							"// Set environment variables",
+							"pm.environment.set(\"firstName\", randomFirstName);",
+							"pm.environment.set(\"lastName\", randomLastName);",
+							"pm.environment.set(\"gender\", randomGender);",
+							"pm.environment.set(\"status\", randomStatus);",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 201\",function(){",
+							"    pm.response.to.have.status(201)",
+							"})",
+							"",
+							"pm.test(\"ID is a number\", function () {",
+							"    var jsonData = pm.response.json()",
+							"    pm.expect(jsonData.id).to.be.a(\"number\")",
+							"})"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disabledSystemHeaders": {}
+			},
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{authToken}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"name\": \"{{firstName}} {{lastName}}\",\n  \"gender\": \"{{gender}}\",\n  \"email\": \"{{firstName}}.{{lastName}}.{{randomEmailId}}@email.com\",\n    \"status\": \"{{status}}\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}",
+					"host": [
+						"{{baseUrl}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get user status",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\",function(){",
+							"    pm.response.to.have.status(200)",
+							"})",
+							"",
+							"let jsonData = pm.response.json();",
+							"pm.test(\"First user's status is valid\", function () {",
+							"    pm.expect([\"active\", \"inactive\"]).to.include(jsonData[0].status)",
+							"})"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}",
+					"host": [
+						"{{baseUrl}}"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
